@@ -17,8 +17,23 @@ path {
   fill: #555;
   cursor: pointer;
 }
-path:hover {
+path.america:hover {
   fill: deepskyblue;
+}
+path.europa:hover {
+  fill: pink;
+}
+path.africa:hover {
+  fill: orange;
+}
+path.asia:hover {
+  fill: purple;
+}
+path.oceania:hover {
+  fill: green;
+}
+path.antartica:hover {
+  fill: yellow;
 }
 
 /* MODAL */

@@ -10,10 +10,17 @@
         <script type="text/javascript" src="./node_modules/jquery/dist/jquery.min.js"></script>
         <script type="text/javascript" src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="./js/index.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBN2DtXghA5PLjX2FuIKFIw08ATsAarZbM&libraries=places&callback=initAutocomplete" async defer></script>
 
     </head>
 
     <body>
+    <div id="locationField">
+      <input id="autocomplete" placeholder="Enter your address" type="text"></input>
+    </div>
+    <input class="field hidden" id="country" disabled="true"></input>
+
+    
     	<div id="detailsModal" class="modal fade" tabindex="-1" role="dialog">
 		  <div class="modal-dialog" role="document">
 		    <div class="modal-content">

@@ -17,7 +17,7 @@ path {
   fill: #555;
   cursor: pointer;
 }
-path.america:hover {
+path.america:hover, path.america.modalcolor {
   fill: deepskyblue;
 }
 path.europa:hover {

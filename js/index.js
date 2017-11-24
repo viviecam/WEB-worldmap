@@ -17,6 +17,33 @@ $(document).ready(function(){
 		// console.log($('svg').find('path #'+iso));
 	});
 
+	if (navigator.geolocation)
+	{
+	    navigator.geolocation.getCurrentPosition(function(position)
+	    {
+	    	var longitude = position.coords.longitude;
+	    	var latitude = position.coords.latitude;
+
+	    	console.log("latitude = "+ longitude +" longitude = "+longitude);
+	        //alert("Latitude : " + position.coords.latitude + ", longitude : " + position.coords.longitude);
+	        
+			// var url = "https://restcountries.eu/rest/v2/all";
+			var url = "https://api.opencagedata.com/geocode/v1/json?q="+ longitude +"%2C%20"+latitude+"&key=3cb5d4185cb14bbc93797e291549a2c7&language=fr&pretty=1";
+			console.log(url);
+			$.getJSON(url, function(data){
+				console.log(data);
+				console.log(data.results[0].components.country_code);
+				//console.log(data.results[0].components.ISO_3166-1_alpha-2);
+
+					
+			});
+
+	    });
+	}
+	else
+    alert("Votre navigateur ne prend pas en compte la géolocalisation HTML5");
+
+
 });
 
 /* Code nécessaire au cas d'utilisation : barre de recherche */

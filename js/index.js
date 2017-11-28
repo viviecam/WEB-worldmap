@@ -3,41 +3,31 @@ var iso;
 
 $(document).ready(function(){
 
+	$('#geoloc > div').hide();
+
 	//Evènement au clic sur un pays de la carte
 	$('path').click(function(){
 		var iso = $(this).attr( "id" );
 		requestDetails(iso);
 	});
 
-	//Evènement au clic sur un pays de la carte
-	$('button#rechercher').click(function(){
+	//Evènement sur bouton rechercher ou bouton detail Geoloc
+	$('button#rechercher, button#geolocDetails').click(function(){
 		console.log(iso);
 		requestDetails(iso);
 		//$('svg').find('path #'+iso).addClass( "modalcolor" );
 		// console.log($('svg').find('path #'+iso));
 	});
 
+	//Evenement au chargement de la page, demande à l'utilisateur de partager sa localisation
 	if (navigator.geolocation)
 	{
 	    navigator.geolocation.getCurrentPosition(function(position)
 	    {
-	    	var longitude = position.coords.longitude;
 	    	var latitude = position.coords.latitude;
-
-	    	console.log("latitude = "+ longitude +" longitude = "+longitude);
-	        //alert("Latitude : " + position.coords.latitude + ", longitude : " + position.coords.longitude);
-	        
-			// var url = "https://restcountries.eu/rest/v2/all";
-			var url = "https://api.opencagedata.com/geocode/v1/json?q="+ longitude +"%2C%20"+latitude+"&key=3cb5d4185cb14bbc93797e291549a2c7&language=fr&pretty=1";
-			console.log(url);
-			$.getJSON(url, function(data){
-				console.log(data);
-				console.log(data.results[0].components.country_code);
-				//console.log(data.results[0].components.ISO_3166-1_alpha-2);
-
-					
-			});
-
+	    	var longitude = position.coords.longitude;
+	    	// console.log("Longitude = "+longitude+ " Latitude = "+latitude);
+			requestISO2(latitude, longitude);
 	    });
 	}
 	else
@@ -93,8 +83,20 @@ function requestISO(nomPays) {
 	});
 }
 
-
 /* Code nécessaire au cas d'utilisation : géolocalisation */
+//Requête vers OpenCageData en envoyant la longitude et la latitude
+function requestISO2(latitude, longitude) {
+	var urlLatLongISO = "https://api.opencagedata.com/geocode/v1/json?q="+ latitude +"%2C%20"+longitude+"&key=3cb5d4185cb14bbc93797e291549a2c7&language=fr&pretty=1";
+	// console.log(urlLatLongISO);
+	$.getJSON(urlLatLongISO, function(data){
+		console.log(data);
+		// console.log(data.results[0].components.country_code);
+		iso = data.results[0].components.country_code;
+		console.log(iso);
+		$("#geoloc label").append(data.results["0"].components.city+", "+data.results[0].components.country);
+		$("#geoloc > div").show();	
+	});
+}
 
 
 /* Code nécessaire aux 3 cas d'utilisation*/
@@ -108,5 +110,6 @@ function requestDetails(iso){
 		$('.modal-title').html(data[0].translations.fr);
 		var urlImg = data[0].flag;
 		$('.modal-body img').attr("src", urlImg);
+		//Penser à rajouter : data-toggle="modal" data-target="#detailsModal" dans l'objet déclencheur
 	});
 }

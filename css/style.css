@@ -3,15 +3,36 @@
 body {
   margin: 0;
   height: 100vh;
-  display: flex;
+  /*display: flex;*/
   justify-content: center;
   align-items: center;
   background: #222;
   overflow: hidden;
+  color: white;
 }
+
+/*GEOLOC*/
+#geoloc {
+  margin-top: 20px;
+}
+
+/*SEARCH*/
+#search {
+  margin-top: 20px;
+}
+
+/* MODAL */
+.modal {
+  color: black;
+}
+.modal-body img {
+  border: 1px solid lightgrey;
+}
+
+/* MAP */
 svg {
-  width: 90vw;
-  height: 90vh;
+  width: 100vw;
+  height: 89vh;
 }
 path {
   fill: #555;
@@ -36,7 +57,3 @@ path.antartica:hover {
   fill: yellow;
 }
 
-/* MODAL */
-.modal-body img {
-  border: 1px solid lightgrey;
-}

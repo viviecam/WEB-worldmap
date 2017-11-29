@@ -29,6 +29,16 @@ body {
   border: 1px solid lightgrey;
 }
 
+.modal ul {
+  list-style-type: none;
+}
+
+@media all and (min-width: 768px) {
+  .modal-body img {
+    width: 50%
+  }
+}
+
 /* MAP */
 svg {
   width: 100vw;

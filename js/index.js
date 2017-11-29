@@ -8,12 +8,14 @@ $(document).ready(function(){
 	//Evènement au clic sur un pays de la carte
 	$('path').click(function(){
 		var iso = $(this).attr( "id" );
+		$('.modal-body li').empty();
 		requestDetails(iso);
 	});
 
 	//Evènement sur bouton rechercher ou bouton detail Geoloc
 	$('button#rechercher, button#geolocDetails').click(function(){
-		console.log(iso);
+		// console.log(iso);
+		$('.modal-body li').empty();
 		requestDetails(iso);
 		//$('svg').find('path #'+iso).addClass( "modalcolor" );
 		// console.log($('svg').find('path #'+iso));
@@ -89,10 +91,10 @@ function requestISO2(latitude, longitude) {
 	var urlLatLongISO = "https://api.opencagedata.com/geocode/v1/json?q="+ latitude +"%2C%20"+longitude+"&key=3cb5d4185cb14bbc93797e291549a2c7&language=fr&pretty=1";
 	// console.log(urlLatLongISO);
 	$.getJSON(urlLatLongISO, function(data){
-		console.log(data);
+		// console.log(data);
 		// console.log(data.results[0].components.country_code);
 		iso = data.results[0].components.country_code;
-		console.log(iso);
+		// console.log(iso);
 		$("#geoloc label").append(data.results["0"].components.city+", "+data.results[0].components.country);
 		$("#geoloc > div").show();	
 	});
@@ -104,12 +106,48 @@ function requestISO2(latitude, longitude) {
 //Requête vers RestCountries en envoyant le code ISO
 function requestDetails(iso){
 	// var url = "https://restcountries.eu/rest/v2/all";
+	var languages = "";
 	var urlIsoDetails = "https://restcountries.eu/rest/v2/alpha?codes=" + iso;
 	$.getJSON(urlIsoDetails, function(data){
-		// console.log(data[0].translations.fr);
+		// console.log(data);
 		$('.modal-title').html(data[0].translations.fr);
-		var urlImg = data[0].flag;
-		$('.modal-body img').attr("src", urlImg);
+		$('.modal-body img').attr("src", data[0].flag);
+		$('.modal-body li#capitale').append("<b>Capitale :</b> "+ data[0].capital);
+		$('.modal-body li#continent').append("<b>Continent :</b> "+ data[0].region);
+		$('.modal-body li#population').append("<b>Population :</b> "+ numberWithSpaces(data[0].population) +" habitants");
+		var borders = data[0].borders;
+		$('.modal-body li#frontieres').append("<b>Pays frontaliers :</b> ");
+		for (var i = 0; i<borders.length; i++) { //Pour chaque pays du tableau des pays frontaliers
+			// console.log(data[0].borders[i]);
+			$.getJSON("https://restcountries.eu/rest/v2/alpha?codes=" + data[0].borders[i], function(data){
+				//On effectue une nouvelle requete json avec le code iso founis
+				// console.log(data[0].translations.fr);
+				$('.modal-body li#frontieres').append(data[0].translations.fr +', ');
+				//Et on recupère le nom du pays 
+			});
+		};
+		$('.modal-body li#monnaie').append("<b>Monnaie principale :</b> "+ data[0].currencies[0].name +" ("+ data[0].currencies[0].symbol+")");
+		$('.modal-body li#langues').append("<b>Langues parlée(s) :</b> ");
+		for (var i = 0; i<data[0].languages.length; i++) { //Pour chaque pays du tableau des langues
+			// console.log(data[0].languages[i].name);
+			languages = languages + data[0].languages[i].name +', ';
+			// $('.modal-body li#languses').append(); //On recupèrel le nom de la langue 
+		};
+		// console.log(languages.length;
+		// console.log(languages);
+		// languages.substring(2,languages.length-2);
+		// console.log(languages);
+
+
+		// $('.modal-body li#langues').append("Langues parlées : "+ data[0].languages);
 		//Penser à rajouter : data-toggle="modal" data-target="#detailsModal" dans l'objet déclencheur
 	});
+}
+
+
+// Fonction qui espace les groupes de 3 chiffres
+const numberWithSpaces = (x) => {
+	var parts = x.toString().split(".");
+	parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+	return parts.join(".");
 }

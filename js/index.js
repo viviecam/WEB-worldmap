@@ -21,7 +21,7 @@ $(document).ready(function(){
 		// console.log($('svg').find('path #'+iso));
 	});
 
-	//Evenement au chargement de la page, demande à l'utilisateur de partager sa localisation
+	//Evenement au chargement de la page, demande à  l'utilisateur de partager sa localisation
 	if (navigator.geolocation)
 	{
 	    navigator.geolocation.getCurrentPosition(function(position)
@@ -107,6 +107,7 @@ function requestISO2(latitude, longitude) {
 function requestDetails(iso){
 	// var url = "https://restcountries.eu/rest/v2/all";
 	var languages = "";
+  // var borders = "";
 	var urlIsoDetails = "https://restcountries.eu/rest/v2/alpha?codes=" + iso;
 	$.getJSON(urlIsoDetails, function(data){
 		// console.log(data);
@@ -115,31 +116,34 @@ function requestDetails(iso){
 		$('.modal-body li#capitale').append("<b>Capitale :</b> "+ data[0].capital);
 		$('.modal-body li#continent').append("<b>Continent :</b> "+ data[0].region);
 		$('.modal-body li#population').append("<b>Population :</b> "+ numberWithSpaces(data[0].population) +" habitants");
-		var borders = data[0].borders;
+
+    //Frontières
+		var frontieres = data[0].borders;
 		$('.modal-body li#frontieres').append("<b>Pays frontaliers :</b> ");
-		for (var i = 0; i<borders.length; i++) { //Pour chaque pays du tableau des pays frontaliers
+		for (var i = 0; i<frontieres.length; i++) { 
 			// console.log(data[0].borders[i]);
 			$.getJSON("https://restcountries.eu/rest/v2/alpha?codes=" + data[0].borders[i], function(data){
-				//On effectue une nouvelle requete json avec le code iso founis
-				// console.log(data[0].translations.fr);
-				$('.modal-body li#frontieres').append(data[0].translations.fr +', ');
-				//Et on recupère le nom du pays 
+        // borders = borders + data[0].translations.fr +', ';
+        $('.modal-body li#frontieres').append(data[0].translations.fr +', ');
 			});
 		};
+    // console.log(borders); 
+    // borders = borders.substring(0, borders.length-2);
+    // console.log(borders);
+    // $('.modal-body li#frontieres').append(borders);
+
+    //Monnaie
 		$('.modal-body li#monnaie').append("<b>Monnaie principale :</b> "+ data[0].currencies[0].name +" ("+ data[0].currencies[0].symbol+")");
-		$('.modal-body li#langues').append("<b>Langues parlée(s) :</b> ");
-		for (var i = 0; i<data[0].languages.length; i++) { //Pour chaque pays du tableau des langues
+
+		//Langues parlées
+    $('.modal-body li#langues').append("<b>Langues parlée(s) :</b> ");
+		for (var i = 0; i<data[0].languages.length; i++) {
 			// console.log(data[0].languages[i].name);
 			languages = languages + data[0].languages[i].name +', ';
-			// $('.modal-body li#languses').append(); //On recupèrel le nom de la langue 
 		};
-		// console.log(languages.length;
+		languages = languages.substring(0, languages.length-2);
 		// console.log(languages);
-		// languages.substring(2,languages.length-2);
-		// console.log(languages);
-
-
-		// $('.modal-body li#langues').append("Langues parlées : "+ data[0].languages);
+    $('.modal-body li#langues').append(languages);
 		//Penser à rajouter : data-toggle="modal" data-target="#detailsModal" dans l'objet déclencheur
 	});
 }

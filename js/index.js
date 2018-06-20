@@ -91,7 +91,7 @@ function requestISO2(latitude, longitude) {
 	var urlLatLongISO = "https://api.opencagedata.com/geocode/v1/json?q="+ latitude +"%2C%20"+longitude+"&key=3cb5d4185cb14bbc93797e291549a2c7&language=fr&pretty=1";
 	// console.log(urlLatLongISO);
 	$.getJSON(urlLatLongISO, function(data){
-		// console.log(data);
+		console.log(data);
 		// console.log(data.results[0].components.country_code);
 		iso = data.results[0].components.country_code;
 		// console.log(iso);
